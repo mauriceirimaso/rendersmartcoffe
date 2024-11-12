@@ -121,7 +121,7 @@ import Production from './Product';
   }; 
   
   useEffect(() => {
-    const unsubscribe = listenForKeyboard();//djdjjd
+    const unsubscribe = listenForKeyboard();
     return unsubscribe;
   }, []);
 
