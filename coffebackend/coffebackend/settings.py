@@ -20,15 +20,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-0j#a^p3dp(69g$crp)8r3q5vqlvaz9d8+q_$4&4lbp6(ktx)**'
+SECRET_KEY = 'django-insecure-0j#a^p3dp(69g$crp)8r3q5vqlvaz9d8+q_$4&4lbp6(ktx)**'
 
 
 import os
 
-SECRET_KEY =os.environ.get("SECRET_KEY")
+# SECRET_KEY =os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG","false").lower="True"
+# DEBUG = os.environ.get("DEBUG","false").lower="True"
+DEBUG =True
+
 
 
 
@@ -49,9 +51,9 @@ def get_local_ip_for_allowed_hosts():
    
     return local_ip
 
-# ALLOWED_HOSTS = ['127.0.0.1', 'localhost','127.7.0.1', get_local_ip_for_allowed_hosts()]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','127.7.0.1', get_local_ip_for_allowed_hosts()]
 
-ALLOWED_HOSTS=os.environ.get("ALLOWED_HOSTS").split(" ")
+# ALLOWED_HOSTS=os.environ.get("ALLOWED_HOSTS").split(" ")
 
 print(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")
 

@@ -2,14 +2,24 @@ import React from 'react';
 import styles from './Homecss';
 import Footer from './Footer';
 import { useState,useEffect } from 'react';
+import MyLoader from './Myloader';
 //import { Picker } from '@react-native-picker/picker';
+import Spinkit from 'react-native-animated-spinkit';
 import RNPickerSelect from 'react-native-picker-select';
+
 const searchicon=require('../assets/icons/search.png');
 const searchsubmit=require('../assets/icons/searchsubmit.png');
 const promo=require('../assets/coffephotoes/promobackground.png');
+import ClipLoader from 'react-spinners/ClipLoader';
+import PuffLoader from 'react-spinners/PuffLoader';
+import AnimatedLoader from 'react-native-animated-spinkit';
+import WaveLoader from './Waveloader';
 import axios from 'axios';
 import Production from './Product';
 import Emptysearch from './Emptysearch';
+import BeatLoader from 'react-spinners/BeatLoader';
+import LottieView from 'lottie-react-native';
+import Spinner from 'react-native-spinkit';
 
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -44,6 +54,7 @@ import {
     TextInput,
     ScrollView,
     Keyboard,
+    ActivityIndicator,
     FlatList,
     Button,
     Image,
@@ -67,6 +78,9 @@ import {
     const [searchValue, setSearchValue] = useState('');
     const [issearching,setissearching]=useState(false);
     const [iskeybordvisible,setiskeybordvisible]=useState(false)
+    const [loading,setloading]=useState(true);
+    const [issearchingcoffe,setissearchingcoffe]=useState(false)
+    const [isfetchingcoffe,setisfetchingcoffe]=useState(false)
 
 
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -91,6 +105,7 @@ import {
     
     const searchcoffe = async (searchvalue) => {
       try {
+        setissearchingcoffe(true);
         setCoffeData([]); 
         console.log("searchvalue", searchvalue);
         console.log("coffetype", search);
@@ -102,7 +117,9 @@ import {
   
         console.log('Response Data:', response.data); 
         setCoffeData(response.data);
+        setissearchingcoffe(false);
       } catch (error) {
+        setissearchingcoffe(false);
         console.error('Error searching data:', error.response ? error.response.data : error.message);
       }
     };
@@ -140,7 +157,9 @@ import {
 
 
     const fetchCoffeData = async (coffeType = 'All-Coffe') => {
+
      try {
+       setisfetchingcoffe(true)
        const response = await axios.get(`${baseURL}/AllCoffe/?coffetype=${coffeType}`, {
          headers: {
            'Content-Type': 'application/json',
@@ -148,8 +167,10 @@ import {
        });
        console.log('Fetched Coffee Data:', response.data);
        setCoffeData(response.data);
+       setisfetchingcoffe(false)
      } catch (error) {
        console.error('Error fetching data', error);
+       setisfetchingcoffe(false);
      }
    };
  
@@ -271,9 +292,18 @@ import {
                            />
                   </View>
                   <View style={styles.lastview}>
+
+                    {issearchingcoffe? 
+                    <View style={{width:'60%',marginLeft:'25%', height:'60%',borderColor:'red'}}>
+                          <ActivityIndicator size="large" color="rgba(227, 171, 17, 0.815)" />
+                    </View>
+                    :
                     <TouchableOpacity onPress={() => {searchcoffe(searchValue),setissearching(true)}} style={styles.searching}>
-                      <Search/>
+                             <Search/>
                     </TouchableOpacity>
+
+                    }
+                   
                   </View>
             </View>
 
@@ -375,9 +405,29 @@ import {
                   <View style={styles.newscroll}>
                      
           
-                               <ScrollView style={{width:'100%',height:'100%',borderColor:'green'}} showsVerticalScrollIndicator={false}>
+                  <ScrollView
+                              style={{ width: '100%', height: '100%', borderColor: 'green' }}
+                              
+                              showsVerticalScrollIndicator={false}
+                            >
 
-                                 {renderCoffeRows()}
+                                
+                            {
+                              (isfetchingcoffe||isfetchingcoffe) ?
+                                      <View style={{marginTop:'40%'}}>
+
+
+                                             <ActivityIndicator size={60} color="rgba(227, 171, 17, 0.815)" />
+                                         </View>
+                              :
+                              <>
+                                   {renderCoffeRows()}
+
+                               </>
+
+                            }
+                                 
+                                 
                                          
                                    
                              </ScrollView>

@@ -188,7 +188,7 @@ const blackMapStyle = [
 
                     <View style={styles.google}>
                    
-                       {location && (
+                       {/* {location && (
                          <MapView
                            customMapStyle={isDarkMode? blackMapStyle : null}
                            style={styles.map}
@@ -207,7 +207,7 @@ const blackMapStyle = [
                              title="Your Location"
                            />
                          </MapView> 
-                       )}
+                       )} */}
                      </View>
                      <View style={styles.lower}>
                          <Text style={{color:'rgba(130, 40, 10, 0.815)',fontWeight:'800'}}>30' Min remaining(00:30)</Text>

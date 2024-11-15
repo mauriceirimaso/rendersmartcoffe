@@ -45,6 +45,7 @@ import {
    StatusBar,
    Button,
    TouchableOpacity,
+   ActivityIndicator,
    Switch,
    ScrollView,
    KeyboardAvoidingView,
@@ -82,6 +83,8 @@ import Production from './Product';
    const [issearching,setissearching]=useState(false);
     const[historycount,sethistorycount]=useState(0);
   const [iskeybordvisible,setiskeybordvisible]=useState(false)
+  const [issearchingorder,setissearchingorder]=useState(false)
+  const [isfetchinghistory,setisfetchinghistory]=useState(false)
 
 
 
@@ -222,6 +225,10 @@ import Production from './Product';
 
   const searchdata = async (productname) => {
       try {
+
+          setissearchingorder(true)
+          setisfetchinghistory(false)
+
           setData([]);
   
           
@@ -241,9 +248,11 @@ import Production from './Product';
   
           
           setData(response.data); 
+          setissearchingorder(false)
   
       } catch (error) {
           console.error('Error fetching data:', error);
+          setissearchingorder(false)
           
       }
   };
@@ -260,6 +269,7 @@ import Production from './Product';
     useEffect(() => {
       const fetchData = async () => {
         try {
+          setisfetchinghistory(true)
           setData([]); 
           const url =
             activeLink === 'ongoing'
@@ -272,16 +282,18 @@ import Production from './Product';
   
           if (response.status === 200) {
             setData(response.data);
+            setisfetchinghistory(false)
           }
         } catch (error) {
           console.error('Error fetching data:', error);
+          setisfetchinghistory(false)
         }
       };
       fetchData();
     }, [activeLink]); 
 
 
-     return(<>
+     return<>
            <StatusBar barStyle="light-content" backgroundColor={'rgb(28, 27, 27)'}  />
            
             <KeyboardAvoidingView style={isDarkMode? iskeybordvisible ? styles.darkgrandview1 : styles.darkgrandview :iskeybordvisible ? styles.grandview1 : styles.grandview}>
@@ -307,9 +319,24 @@ import Production from './Product';
                                     onChangeText={setproductname} 
                                      keyboardAppearance="default"
                                     />
-                         <TouchableOpacity style={styles.searchsubmit} onPress={()=>{handleSearch(),setissearching(true)}}>
-                              <Search/>
-                         </TouchableOpacity>
+
+                                    {issearchingorder?
+
+                                    <View style={{borderColor:'red',flex:1,height:'100%',justifyContent:'center',alignItems:'center'}}>
+
+                                          <ActivityIndicator 
+                                          size={18} 
+                                          color="rgba(227, 171, 17, 0.815)" 
+                                          style={{ transform: [{ scale: 1.5 }] }}
+                                          />
+                                    </View>
+                                     :
+
+                                     <TouchableOpacity style={styles.searchsubmit} onPress={()=>{handleSearch(),setissearching(true)}}>
+                                           <Search/>
+                                     </TouchableOpacity>
+                                    }
+                         
                      </View>
                   </View>
 
@@ -379,6 +406,23 @@ import Production from './Product';
                               <View style={styles.tradeorders}>
                                  <ScrollView showsVerticalScrollIndicator={false} style={{borderColor:'green',height:'100%',width:'90%',marginLeft:'5%',overflow:'hidden'}}>
 
+
+                              {(issearchingorder||isfetchinghistory)?
+                              
+                                   <View style={{borderColor:'red',marginLeft:'30%',justifyContent:'center',alignItems:'center',width:'30%',height:30,marginTop:'50%'}}>
+
+                                         <ActivityIndicator 
+                                         size={18} 
+                                         color="rgba(227, 171, 17, 0.815)" 
+                                         style={{ transform: [{ scale: 1.5 }] }}
+                                          />
+                                    </View>      
+                               :
+
+                                
+                              <>
+                              
+                                
                                  {issearching ? (
                                           data.length === 0 ? (
                                             <Emptysearch />
@@ -450,6 +494,10 @@ import Production from './Product';
                                               ) : (
                                                 <Emptyrecord photo={history} />
                                               )}
+                                              
+                                              </>
+                                              
+                                              }
                                                                                     
                                  </ScrollView>
 
@@ -468,6 +516,6 @@ import Production from './Product';
            <KeyboardAvoidingView style={isDarkMode? iskeybordvisible ? {display:'none'}: styles.darkfooter : iskeybordvisible ? {display:'none'}: styles.darkfooter}>
                   <Footer/>
              </KeyboardAvoidingView>
-         </>)
+         </>
 }
 export default Trade

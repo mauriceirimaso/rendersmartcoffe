@@ -123,6 +123,10 @@ const styles = StyleSheet.create({
         
         marginLeft:15,
         flex:1,
+      
+        
+        justifyContent:'center',
+       
        
 
     },
